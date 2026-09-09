@@ -1,0 +1,11 @@
+import { readFile, access, readdir } from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const html=await readFile(new URL('../dist/index.html',import.meta.url),'utf8');
+assert.match(html,/Henry’s Trains/);assert.match(html,/viewport-fit=contain/);
+for(const match of html.matchAll(/(?:src|href)="(\.\/[^"#]+)"/g))await access(new URL('../dist/'+match[1].slice(2),import.meta.url));
+const manifest=JSON.parse(await readFile(new URL('../dist/manifest.webmanifest',import.meta.url),'utf8'));
+assert.equal(manifest.start_url,'./');assert.equal(manifest.scope,'./');assert.equal(manifest.display,'standalone');
+for(const image of manifest.icons)await access(new URL('../dist/'+image.src.slice(2),import.meta.url));
+await access(new URL('../dist/.nojekyll',import.meta.url));
+const assets=await readdir(new URL('../dist/assets',import.meta.url));assert.ok(assets.some(p=>p.endsWith('.js')));assert.ok(assets.some(p=>p.endsWith('.css')));
+console.log('Verified relative assets, app icons, standalone manifest, and production files.');
