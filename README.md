@@ -14,6 +14,12 @@ A complete 3D revamp of Henry the Train: a small toy railway Henry can control, 
 
 Parent controls include volume, optional original music, steady lights, gentle movement, repeating shows and a pictures-only interface. Settings stay on the device. The game pauses while parent controls are open or the app is hidden. There are no accounts, timers, scores, advertisements, tracking or purchases.
 
+## Game Center and artwork
+
+Henry’s Trains is listed in [Game Center](https://seansommer.github.io/gamecenter/?play=henrystrains) as a guest game. The original Henry the Train remains a separate game in the collection.
+
+The named train artwork supplies the Game Center tile, favicon, Apple touch icon, Android icons, header and loading image. The original 1200×630 sharing card is `public/og.png`; Open Graph and X metadata use the public game URL. Prompts and asset mapping are in `docs/henry-named-artwork.md`.
+
 ## Hosting
 
 The entire game runs in the browser. No Firebase rules, Cloudflare Worker, database, API key or paid 3D service is required. Graphics need a browser with WebGL 2 support; there is a link to the original game if 3D cannot start.

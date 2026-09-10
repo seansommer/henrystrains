@@ -12,7 +12,7 @@ const speed=(id:string,label:string,value:number)=>`<div class="speed-control"><
 document.querySelector<HTMLDivElement>('#app')!.innerHTML=`
 <main class="railway-app">
   <header class="topbar">
-    <img class="app-badge" src="./icon-192.png" width="42" height="42" alt=""/>
+    <img class="app-badge" src="./henry-icon-192.png" width="42" height="42" alt=""/>
     <h1>Henry’s <span>Trains</span></h1>
     <nav aria-label="Sound and parent controls">
       <button class="icon-button" id="sound" aria-label="Mute sound" aria-pressed="false">${icon('volume')}</button>
@@ -32,7 +32,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML=`
     <p id="scene-message" class="scene-message" role="status">Pick a train. You’re the driver.</p>
     <button class="discovery-button" data-discover="duck">Say hello to the duck</button>
     <button class="discovery-button" data-discover="station">Ring the station bell</button>
-    <div class="loading" id="loading"><img src="./icon-192.png" width="100" height="100" alt=""/><p>Getting your railway ready…</p></div>
+    <div class="loading" id="loading"><img src="./henry-icon-192.png" width="100" height="100" alt=""/><p>Getting your railway ready…</p></div>
     <div class="unavailable" id="unavailable" hidden><h2>Your railway needs a restart</h2><p>Let’s try opening the 3D world again.</p><button id="retry">Try again</button><a href="https://seansommer.github.io/henrythetrain/">Play Henry the Train</a></div>
   </section>
   <section class="driver-desk" aria-label="Train and crossing controls">
@@ -53,6 +53,8 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML=`
     </div>
     <div class="play-guide"><strong>A little world he controls</strong><p>Go starts a continuous train ride. Tap again to stop. The lights and gates each follow his taps—even halfway through moving.</p><p><strong>Crossing show</strong> plays lights → gates → one lap → gates up. Any main control returns to free play. Tap the duck or station for a little hello.</p></div>
     <button class="back-button" id="back">Back to my railway</button>
+    <button class="share-railway" id="share-railway">Share Henry’s Trains</button>
+    <p class="share-status" id="share-status" role="status" hidden></p>
     <a class="hub-link" href="https://seansommer.github.io/gamecenter/">Game Center</a>
     <p class="credit">Made for Henry, with love. · Created by Sean</p>
   </dialog>
@@ -104,6 +106,14 @@ get('close-settings').addEventListener('click',closeSettings);get('back').addEve
 dialog.addEventListener('close',()=>{model.suspended=document.hidden;});
 document.addEventListener('visibilitychange',()=>{model.suspended=document.hidden||dialog.open;sound.update(model);});
 get('retry').addEventListener('click',()=>location.reload());
+get('share-railway').addEventListener('click',async()=>{
+  const share={title:'Henry’s Trains',text:'Choose your train, flash the lights, and lower the gates. All aboard Henry’s little railway!',url:'https://seansommer.github.io/henrystrains/'};
+  const status=get('share-status');status.hidden=true;
+  if(navigator.share){try{await navigator.share(share);return;}catch(error){if((error as DOMException).name==='AbortError')return;}}
+  try{await navigator.clipboard.writeText(share.url);status.textContent='Game link copied. All aboard!';}
+  catch{status.textContent='Copy this game link: '+share.url;}
+  status.hidden=false;
+});
 function failure(){get('loading').hidden=true;get('unavailable').hidden=false;model.suspended=true;sound.update(model);}
 try {
   world=new TrainWorld(get('world'),model,action,failure);
